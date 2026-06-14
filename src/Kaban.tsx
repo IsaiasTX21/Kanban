@@ -5,6 +5,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
+import backgroundgreen from "./assets/backgroundgreen.jpg"
+import editicon from "./assets/edit.png"
+import trash from "./assets/trash.png"
+import userphoto from "./assets/user.png"
+
 
 export const Kaban = () => {
 
@@ -32,7 +37,7 @@ export const Kaban = () => {
   useEffect(() => {
    
    const img = new Image();
-    img.src ='src/assets/backgroundgreen.jpg'; 
+    img.src =backgroundgreen; 
     img.onload = () => {
     setload(false)
   };
@@ -149,7 +154,7 @@ function edit(id:number | null){
 
 
   return (
-    <div style={{backgroundImage:`url(src/assets/backgroundgreen.jpg)`}} id="container">
+    <div style={{backgroundImage:`url(${backgroundgreen})`}} id="container">
 
  <Modal show={showtwo} onHide={()=> setShowtwo(false)}>
       <Modal.Header closeButton>
@@ -209,10 +214,10 @@ function edit(id:number | null){
         >
           {todo.map((item: Users) => (
           <div className="task" key={item.id}> 
-            <span className="name"> <img src={item.photo || "src/assets/user.png"} alt="avatar" /> {item.name} </span>
+            <span className="name"> <img src={item.photo || userphoto} alt="avatar" /> {item.name} </span>
             <p >{item.task}</p>
-            <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src="src/assets/trash.png" alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src="src/assets/edit.png" alt="icone edição"/></button>
+            <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
+             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon}  alt="icone edição"/></button>
             </div>
 
           ))}
@@ -234,10 +239,10 @@ function edit(id:number | null){
 
           {doing.map((item: Users) => (
             <div className="task" key={item.id}>
-              <span className="name"> <img src={item.photo || "src/assets/user.png"} alt="avatar" />  {item.name} </span>
+              <span className="name"> <img src={item.photo || userphoto} alt="avatar" />  {item.name} </span>
               <p>{item.task}</p>
-             <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src="src/assets/trash.png" alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src="src/assets/edit.png" alt="icone edição"/></button>
+             <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
+             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon}  alt="icone edição"/></button>
             </div>
           ))}
 
@@ -257,10 +262,10 @@ function edit(id:number | null){
 
           {Review.map((item: Users) => (
             <div className="task" key={item.id}>
-               <span className="name">  <img src={item.photo || "src/assets/user.png"} alt="avatar" />  {item.name} </span>
+               <span className="name">  <img src={item.photo || userphoto} alt="avatar" />  {item.name} </span>
             <p>{item.task}</p>
-                         <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src="src/assets/trash.png" alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src="src/assets/edit.png" alt="icone edição"/></button>
+                         <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
+             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon}  alt="icone edição"/></button>
             </div>
 
           ))}
@@ -280,10 +285,10 @@ function edit(id:number | null){
         >
           {Done.map((item: Users) => (
             <div className="task" key={item.id}>
-                   <span className="name">  <img src={item.photo || "src/assets/user.png"} alt="avatar" />  {item.name} </span>
+                   <span className="name">  <img src={item.photo || userphoto} alt="avatar" />  {item.name} </span>
             <p>{item.task}</p>
-            <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src="src/assets/trash.png" alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src="src/assets/edit.png" alt="icone edição"/></button>
+            <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
+             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon} alt="icone edição"/></button>
              
             </div>))}
 
