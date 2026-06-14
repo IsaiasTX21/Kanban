@@ -32,7 +32,7 @@ export const Kaban = () => {
   useEffect(() => {
    
    const img = new Image();
-    img.src ='src/assets/backgroundgreen.png'; 
+    img.src ='src/assets/backgroundgreen.jpg'; 
     img.onload = () => {
     setload(false)
   };
@@ -149,7 +149,7 @@ function edit(id:number | null){
 
 
   return (
-    <div style={{backgroundImage:`url(src/assets/backgroundgreen.png)`}} id="container">
+    <div style={{backgroundImage:`url(src/assets/backgroundgreen.jpg)`}} id="container">
 
  <Modal show={showtwo} onHide={()=> setShowtwo(false)}>
       <Modal.Header closeButton>
