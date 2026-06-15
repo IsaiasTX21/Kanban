@@ -1,15 +1,10 @@
 
-import { useState, useEffect} from "react";
-import { ReactSortable } from "react-sortablejs";
+import { useState, useEffect } from "react";
+import { ColumnTasks } from "./Columns";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
 import backgroundgreen from "./assets/backgroundgreen.jpg"
-import editicon from "./assets/edit.png"
-import trash from "./assets/trash.png"
-import userphoto from "./assets/user.png"
-
+import { Modals } from "./modal";
 
 export const Kaban = () => {
 
@@ -17,285 +12,249 @@ export const Kaban = () => {
     id: number,
     name: string,
     task: string,
+    photo?: string | undefined
+  }
+
+  type Modal = {
+    editor: boolean,
+    create: boolean
+  }
+
+  type Form = {
+    name: string,
+    message: string,
     photo?: string
   }
-   
-  const [task,setTask ] = useState<string>("")
-  const [name,setName ] = useState<string>("")
-  const [message,setMessage] = useState<string>("")
-  const [load, setload] = useState<boolean>(true)
-  const [photo, setPhoto]= useState<string>("")
-  const [show, setShow] = useState<boolean>(false);
-  const [showtwo, setShowtwo] = useState<boolean>(false);
-  const [todo, setTodo] = useState<Users[]>([]);
+  type Tasks = {
+    todo: Users[];
+    doing: Users[];
+    review: Users[];
+    done: Users[];
+  }
+
+  type ColumnType = "todo" | "doing" | "review" | "done";
+  const [form, setform] = useState<Form>({ name: "", message: "", photo: "" })
+  const [show, setShow] = useState<Modal>({ editor: false, create: false });
   const [id, SetID] = useState<number | null>(null)
-  const [doing, setDoing] = useState<Users[]>([]);
-  const [Review, setReview] = useState<Users[]>([]);
-  const [Done, setDone] = useState<Users[]>([]);
-
-
+  const [Columns, setColumns] = useState<ColumnType>("todo")
+  const [load, setload] = useState<boolean>(true)
+  const [task, SetTask] = useState<Tasks>({ todo: [], doing: [], review: [], done: [] })
+  
   useEffect(() => {
-   
-   const img = new Image();
-    img.src =backgroundgreen; 
+
+    const img = new Image();
+    img.src = backgroundgreen;
     img.onload = () => {
-    setload(false)
-  };
-}, []);
+      setload(false)
+    };
+  }, []);
 
-
-  if(load) {  return <div id="container-spin">  <Spinner animation="border" role="status">
+  if (load) {
+    return <div id="container-spin"> <Spinner animation="border" role="status">
       <span className=""></span>
     </Spinner></div>
   }
 
-  function Newuser(){
-   
-     
-      if(name.trim().split(" ").length >= 2 ) return alert("Escreva apenas seu primeiro nome.")
-       if(name.split("").length > 13) return alert("Máximo 13 caracteres.")
-      if(message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
-      if(name.length === 0 || message.length === 0 ){
-     
-        return alert("Nome e tarefa são obrigatórios.") 
+  function Newuser() {
+
+    if (form.name.trim().split(" ").length >= 2) return alert("Escreva apenas seu primeiro nome.")
+    if (form.name.split("").length > 13) return alert("Máximo 13 caracteres.")
+    if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
+    if (form.name.length === 0 || form.message.length === 0) {
+
+      return alert("Nome e tarefa são obrigatórios.")
     }
 
-    if(task === "todo"){
-      let newuser:Users = {
-      id:Number(new Date()),
-      name: name,
-      task:message,
-      photo: photo
-   }
-   
-    setTodo((prev)=> [...prev, newuser])
-    setTask("")
 
+    let newUser: Users = {
+      id: Number(new Date()),
+      name: form.name,
+      task: form.message,
+      photo: form.photo
     }
 
-      else if (task === "doing"){
-         let newuser:Users = {
-     id:Number( new Date()),
-      name: name,
-      task:message,
-       photo: photo
-   }
-   
-    setDoing((prev)=> [...prev, newuser])
-    setTask("")
+    switch (Columns) {
 
+      case "todo":
+        SetTask(prev => ({ ...prev, todo: [...prev.todo, newUser] }));
+        break;
+
+      case "doing":
+        SetTask(prev => ({ ...prev, doing: [...prev.doing, newUser] }));
+        break;
+
+      case "review":
+        SetTask(prev => ({ ...prev, review: [...prev.review, newUser] }));
+        break;
+
+      case "done":
+        SetTask(prev => ({ ...prev, done: [...prev.done, newUser] }));
+        break;
     }
 
-      else if (task === "review"){
-         let newuser:Users = {
-     id:Number( new Date()),
-      name: name,
-      task:message,
-       photo: photo
-   }
-   
-    setReview((prev)=> [...prev, newuser])
-    setTask("")
-
-    }
-
-  else if (task === "done"){
-         let newuser:Users = {
-    id:Number( new Date()),
-      name: name,
-      task:message,
-       photo: photo
-   }
-   
-    setDone((prev)=> [...prev, newuser])
-    setTask("")
-
-    }
-     setPhoto("")
-    setShow((false))
-
-    setName("")
-    setMessage("")
+    setShow((prev) => ({ ...prev, create: false }))
+    setform((prev) => ({ ...prev, name: "", message: "", photo: "" }))
 
   }
 
+  function exclude(id: number) {
 
- function exclude(id:number){
+    SetTask((prev) => ({
+      todo: prev.todo.filter((item) => item.id !== id),
+      doing: prev.doing.filter((item) => item.id !== id),
+      review: prev.review.filter((item) => item.id !== id),
+      done: prev.done.filter((item) => item.id !== id),
+    }));
+  }
 
-  setTodo((prev)=> prev.filter((element)=> element.id !== id))
-  setDoing((prev)=> prev.filter((element)=> element.id !== id))
-  setReview((prev)=> prev.filter((element)=> element.id !== id))
-  setDone((prev)=> prev.filter((element)=> element.id !== id))
- }
+  function edit() {
 
+    if (id === null) return;
 
-function edit(id:number | null){
-  
-      if(name.trim().split(" ").length >= 2 ) return alert("Escreva apenas seu primeiro nome.")   
-      if(name.split("").length > 13) return alert("Máximo 13 caracteres.")
-      if(message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
-      if(name.length === 0 || message.length === 0 ){
-      return alert("Nome e tarefa são obrigatórios.") 
+    if (form.name.trim().split(" ").length >= 2) return alert("Escreva apenas seu primeiro nome.")
+    if (form.name.split("").length > 13) return alert("Máximo 13 caracteres.")
+    if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
+    if (form.name.length === 0 || form.message.length === 0) {
+      return alert("Nome e tarefa são obrigatórios.")
     }
 
-   if(id === null) return 
-   if(message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
+    if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
 
-  setTodo((prev)=> prev.map((element)=> element.id === id ? {...element, name :name, task:message} : element ))
-  setDoing((prev)=> prev.map((element)=> element.id === id ? {...element, name :name, task:message} : element ))
-  setReview((prev)=> prev.map((element)=> element.id === id ? {...element, name :name, task:message} : element ))
-  setDone((prev)=> prev.map((element)=> element.id === id ? {...element, name :name, task:message} : element ))
- setShowtwo(false)
- SetID(null)
-  setName("")
-  setMessage("")
-}
+    SetTask((prev: Tasks) => ({
+      ...prev,
+      [Columns]: prev[Columns].map((element: any) =>
+        element.id === id
+          ? {
+            ...element,
+            name: form.name,
+            task: form.message,
+          }
+          : element
+      ),}));
 
-
+    setform((prev) => ({ ...prev, name: "", message: "" }))
+    setShow((prev) => ({ ...prev, editor: false }))
+  }
 
   return (
-    <div style={{backgroundImage:`url(${backgroundgreen})`}} id="container">
+    <div style={{ backgroundImage: `url(${backgroundgreen})` }} id="container">
 
- <Modal show={showtwo} onHide={()=> setShowtwo(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>Editando tarefa</Modal.Title>
-        </Modal.Header>
-        <Modal.Body> 
-          <input onChange={(e)=> setName(e.target.value)} placeholder="Escreva seu primeiro nome..." className="form-control"/>
-          <input  onChange={(e)=> setMessage(e.target.value)} placeholder="Tarefa desejada..." className="mt-3 form-control" />
-          
-            </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary " className="btn btn-danger" onClick={()=> setShowtwo(false)}>Fechar</Button>
-          <Button variant="primary" onClick={()=> edit(id)}>Salvar</Button>
+      <Modals
+        setform={setform}
+        setShow={setShow}
+        create={show.create}
+        editor={show.editor}
+        edit={edit}
+        Newuser={Newuser}
+      />
 
-        </Modal.Footer>
-      </Modal>
+      <ColumnTasks title="Fazer" tasks={task.todo}
+        setTasks={(newList) =>
+          SetTask((prev) => ({
+            ...prev,
+            todo: newList,
+          }))
+        }
+        onDelete={exclude}
+        onEdit={(id) => {
+          SetID(id);
+          setColumns("todo");
+          setShow((prev) => ({
+            ...prev,
+            editor: true,
+          }));
+        }}
+        onCreate={() => {
+          setColumns("todo");
+          setShow((prev) => ({
+            ...prev,
+            create: true,
+          }));
+        }}
+      />
 
-      <Modal show={show} onHide={()=> setShow(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>Criar nova Tarefa</Modal.Title>
-        </Modal.Header>
-        <Modal.Body> 
-          <input onChange={(e)=> setName(e.target.value)} placeholder="Escreva seu primeiro nome..." className="form-control"/>
-          <input  onChange={(e)=> setMessage(e.target.value)} placeholder="Tarefa desejada..." className="mt-3 form-control" />
-          <label className="mt-3 " htmlFor="foto">selecionar Imagem</label>
-         <input id="foto" hidden={true} name="foto" type="file" onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-       
-       const file = e.target.files?.[0];
+      <ColumnTasks
+        title="Fazendo"
+        tasks={task.doing}
+        setTasks={(newList) =>
+          SetTask((prev) => ({
+            ...prev,
+            doing: newList,
+          }))
+        }
+        onDelete={exclude}
+        onEdit={(id) => {
+          SetID(id);
+          setColumns("doing");
+          setShow((prev) => ({
+            ...prev,
+            editor: true,
+          }));
+        }}
+        onCreate={() => {
+          setColumns("doing");
+          setShow((prev) => ({
+            ...prev,
+            create: true,
+          }));
+        }}
+      />
 
-    if (!file) return;
+      <ColumnTasks
+        title="revisão"
+        tasks={task.review}
+        setTasks={(newList) =>
+          SetTask((prev) => ({
+            ...prev,
+            review: newList,
+          }))
+        }
+        onDelete={exclude}
+        onEdit={(id) => {
+          SetID(id);
+          setColumns("review");
+          setShow((prev) => ({
+            ...prev,
+            editor: true,
+          }));
+        }}
+        onCreate={() => {
+          setColumns("review");
+          setShow((prev) => ({
+            ...prev,
+            create: true,
+          }));
+        }}
+      />
 
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setPhoto(reader.result as string);
-      
-    };
-
-    reader.readAsDataURL(file);}}/>       
-          </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary " className="btn btn-danger" onClick={()=> setShow(false)}>Fechar</Button>
-          <Button variant="primary" onClick={Newuser}>Salvar</Button>
-           
-        </Modal.Footer>
-      </Modal>
-
-      
-      <div className="card">
-        <span >Fazer</span>
-        <ReactSortable
-          className="sortable" 
-          list={todo}
-          setList={setTodo}
-          group="groupName"
-          animation={80}
-        >
-          {todo.map((item: Users) => (
-          <div className="task" key={item.id}> 
-            <span className="name"> <img src={item.photo || userphoto} alt="avatar" /> {item.name} </span>
-            <p >{item.task}</p>
-            <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon}  alt="icone edição"/></button>
-            </div>
-
-          ))}
-
-        </ReactSortable>
-        <button onClick={()=> {setShow(true), setTask("todo")}}  className="m-auto btn ">< span id="todo">+ Adicionar tarefa</span></button >
-      
-      </div>
-
-      <div className="card">
-        <span  >Progresso</span >
-        <ReactSortable
-          className="sortable"
-          list={doing}
-          setList={setDoing}
-          group="groupName"
-          animation={80}
-        >
-
-          {doing.map((item: Users) => (
-            <div className="task" key={item.id}>
-              <span className="name"> <img src={item.photo || userphoto} alt="avatar" />  {item.name} </span>
-              <p>{item.task}</p>
-             <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon}  alt="icone edição"/></button>
-            </div>
-          ))}
-
-        </ReactSortable>
-        <button onClick={()=> {setShow(true), setTask("doing")}}  className="m-auto btn "><span id="2" >+ Adicionar tarefa</span></button >
-      </div>
-
-      <div className="card">
-        <span>Revisão</span >
-        <ReactSortable
-          className="sortable"
-          list={Review}
-          setList={setReview}
-          group="groupName"
-          animation={80}
-         >
-
-          {Review.map((item: Users) => (
-            <div className="task" key={item.id}>
-               <span className="name">  <img src={item.photo || userphoto} alt="avatar" />  {item.name} </span>
-            <p>{item.task}</p>
-                         <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon}  alt="icone edição"/></button>
-            </div>
-
-          ))}
-
-        </ReactSortable>
-        <button onClick={()=> {setShow(true), setTask("review")}}  className="m-auto btn "><span>+ Adicionar tarefa</span></button >
-      </div>
-
-      <div className="card">
-        <span>Finalizado</span >
-        <ReactSortable
-          className="sortable"
-          list={Done}
-          setList={setDone}
-          group="groupName"
-          animation={80}
-        >
-          {Done.map((item: Users) => (
-            <div className="task" key={item.id}>
-                   <span className="name">  <img src={item.photo || userphoto} alt="avatar" />  {item.name} </span>
-            <p>{item.task}</p>
-            <button className="trash"  onClick={()=> exclude(item.id)}> <img className="icon" src={trash} alt="icone lixeira" /> </button>
-             <button className="edit" onClick={()=> {setShowtwo(true), SetID(item.id)}}><img className="icon" src={editicon} alt="icone edição"/></button>
-             
-            </div>))}
-
-        </ReactSortable>
-        <button onClick={()=> {setShow(true), setTask("done")}}  className="m-auto btn "><span>+ Adicionar tarefa</span></button >
-      </div>
-
+      <ColumnTasks
+        title="Feito"
+        tasks={task.done}
+        setTasks={(newList) =>
+          SetTask((prev) => ({
+            ...prev,
+            done: newList,
+          }))
+        }
+        onDelete={exclude}
+        onEdit={(id) => {
+          SetID(id);
+          setColumns("done");
+          setShow((prev) => ({
+            ...prev,
+            editor: true,
+          }));
+        }}
+        onCreate={() => {
+          setColumns("done");
+          setShow((prev) => ({
+            ...prev,
+            create: true,
+          }));
+        }}
+      />
     </div>
+
+
   );
 };
