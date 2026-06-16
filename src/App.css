@@ -8,6 +8,7 @@ box-sizing: 0px;
 
 body{
 background-color: #044B55;
+
 }
 
 #container{
@@ -18,6 +19,7 @@ flex-wrap: wrap;
 align-items: center;  
 gap: 30px;
 min-height: 100vh;
+
 }
  .sortable{
  min-height: 520px; 
@@ -98,15 +100,14 @@ height: 30px;
 width: 30px;
 }
 
-@media only screen and (width < 645px ){
+@media only screen and (width < 1300px ){
 
 #container{
-margin: auto;
-display: flex;
+
 justify-content: flex-start;
-align-items: center;  
 flex-wrap: nowrap;
 gap: 30px;
+overflow-x: auto;
 }
 
 .card{
