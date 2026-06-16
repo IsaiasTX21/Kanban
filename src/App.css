@@ -14,7 +14,9 @@ flex-wrap: wrap;
 align-items: center;  
 min-height: 100vh;
 gap: 30px;
-background-size: cover;
+background-position-x: 60%;
+background-color: #044b55;
+
 
 }
  .sortable{
@@ -22,7 +24,7 @@ background-size: cover;
 }
 
 .card{
-background-color: rgba(0, 0, 0, 0.2);
+background-color: rgba(2, 2, 2, 0.33);
 width: 300px;
 border-radius: 10px;
 min-height: 520px;
@@ -30,7 +32,7 @@ min-height: 520px;
 }
 
 .task{
-background-color: rgba(240, 255, 235, 0.8);
+background-color: rgba(187, 230, 250, 0.8);
 border-radius: 10px;
 height: 160px;
 margin: 10px;
@@ -56,12 +58,12 @@ height: 50px;
 border-radius: 50%;
 }
 
-#container-spin{
+#container-loading{
 display:flex;
 align-items: center;
 justify-content: center;
 height: 100vh;
-background-color: #007700;
+background-color: #14808f;
 
 }
 

@@ -2,8 +2,6 @@
 import { useState, useEffect } from "react";
 import { ColumnTasks } from "./Columns";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Spinner from 'react-bootstrap/Spinner';
-import backgroundgreen from "./assets/backgroundgreen.jpg"
 import { Modals } from "./modal";
 
 export const Kaban = () => {
@@ -37,33 +35,38 @@ export const Kaban = () => {
   const [show, setShow] = useState<Modal>({ editor: false, create: false });
   const [id, SetID] = useState<number | null>(null)
   const [Columns, setColumns] = useState<ColumnType>("todo")
-  const [load, setload] = useState<boolean>(true)
+  const [loaded, setLoaded] = useState<boolean>(false)
   const [task, SetTask] = useState<Tasks>({ todo: [], doing: [], review: [], done: [] })
   
-  useEffect(() => {
 
-    const img = new Image();
-    img.src = backgroundgreen;
-    img.onload = () => {
-      setload(false)
-    };
-  }, []);
+useEffect(() => {
+  if (!loaded) return;
 
-  if (load) {
-    return <div id="container-spin"> <Spinner animation="border" role="status">
-      <span className=""></span>
-    </Spinner></div>
+  localStorage.setItem("Tasks", JSON.stringify(task));
+}, [task, loaded]);
+
+
+useEffect(() => {
+  const data = localStorage.getItem("Tasks");
+
+  if (data) {
+    SetTask(JSON.parse(data));
   }
 
+  setLoaded(true);
+}, []);
+
+
+
+  
   function Newuser() {
+
 
     if (form.name.trim().split(" ").length >= 2) return alert("Escreva apenas seu primeiro nome.")
     if (form.name.split("").length > 13) return alert("Máximo 13 caracteres.")
     if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
     if (form.name.length === 0 || form.message.length === 0) {
-
-      return alert("Nome e tarefa são obrigatórios.")
-    }
+       return alert("Nome e tarefa são obrigatórios.")}
 
 
     let newUser: Users = {
@@ -116,6 +119,8 @@ export const Kaban = () => {
     if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
     if (form.name.length === 0 || form.message.length === 0) {
       return alert("Nome e tarefa são obrigatórios.")
+
+      
     }
 
     if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
@@ -137,7 +142,7 @@ export const Kaban = () => {
   }
 
   return (
-    <div style={{ backgroundImage: `url(${backgroundgreen})` }} id="container">
+    <div  id="container">
 
       <Modals
         setform={setform}
