@@ -18,7 +18,7 @@ type ModalProps = {
   editor: boolean;
   setShow: Dispatch<SetStateAction<Show>>;
   setform: Dispatch<SetStateAction<Form>>;
-edit: () => void;
+  edit: () => void;
   Newuser: () => void;
 };
 

@@ -56,12 +56,8 @@ useEffect(() => {
   setLoaded(true);
 }, []);
 
-
-
-  
   function Newuser() {
-
-
+    
     if (form.name.trim().split(" ").length >= 2) return alert("Escreva apenas seu primeiro nome.")
     if (form.name.split("").length > 13) return alert("Máximo 13 caracteres.")
     if (form.message.split("").length > 80) return alert("O texto não pode ter mais que 80 caracteres.")
@@ -127,7 +123,7 @@ useEffect(() => {
 
     SetTask((prev: Tasks) => ({
       ...prev,
-      [Columns]: prev[Columns].map((element: any) =>
+      [Columns]: prev[Columns].map((element: Users) =>
         element.id === id
           ? {
             ...element,

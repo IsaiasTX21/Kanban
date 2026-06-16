@@ -19,8 +19,8 @@ type ColumnTasksProps = {
   onCreate: () => void;
 };
 
-export function ColumnTasks({ title, tasks, setTasks, onDelete, onEdit, onCreate,
-}: ColumnTasksProps) {
+export function ColumnTasks({ title, tasks, setTasks, onDelete, 
+  onEdit, onCreate }: ColumnTasksProps) {
   return (
     <div className="card">
       <span>{title}</span>
@@ -57,13 +57,13 @@ export function ColumnTasks({ title, tasks, setTasks, onDelete, onEdit, onCreate
 
             <button
               className="edit"
-              onClick={() => onEdit(item.id)}
-            >
+              onClick={() => onEdit(item.id)}>
+
               <img
                 className="icon"
                 src={editicon}
-                alt="icone edição"
-              />
+                alt="icone edição"/>
+
             </button>
           </div>
         ))}
